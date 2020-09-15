@@ -1,3 +1,4 @@
+use anyhow::Result;
 use structopt::StructOpt;
 
 use super::tag;
@@ -25,10 +26,10 @@ impl Cli {
         }
     }
 
-    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let input = self.prompt("🤖 Please input a tag manually.")?;
+    pub fn run(&self) -> Result<()> {
+        let input = self.prompt("> 🤖 Please input a tag manually:")?;
         let tag = tag::Tag::new(&input, self.opt.prefix.clone())?;
-        println!("✨ A new tag: {}", tag.to_string());
+        println!("✨ The new tag: {}", tag.to_string());
         Ok(())
     }
 
