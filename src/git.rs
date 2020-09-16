@@ -13,7 +13,7 @@ pub struct GitRepo {
 }
 
 pub trait GitClientIO {
-    fn tag(&self, prefix: &str) -> Result<String>;
+    fn get_tags(&self, prefix: &str) -> Result<String>;
 }
 
 struct GitClient {}
@@ -29,7 +29,7 @@ impl GitClient {
 }
 
 impl GitClientIO for GitClient {
-    fn tag(&self, prefix: &str) -> Result<String> {
+    fn get_tags(&self, prefix: &str) -> Result<String> {
         let output = self.exec(vec![
             "tag",
             "-l",
@@ -58,7 +58,7 @@ impl GitRepoIO for GitRepo {
     /// `git tag -l 'prefix*' --format='%(refname:short) %(creatordate:format:%s)'`
     /// => 'prefix1.0.0 1373529534'
     fn get_tags(&self, prefix: &str) -> Result<Vec<tag::Tag>> {
-        let output = self.client.tag(prefix)?;
+        let output = self.client.get_tags(prefix)?;
         let pattern = format!("'{}(.*) (.*)'", prefix);
         let regex = Regex::new(&pattern).unwrap();
         let mut tags: Vec<tag::Tag> = output

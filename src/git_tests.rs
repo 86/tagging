@@ -15,7 +15,7 @@ impl MockGitClient {
 }
 
 impl GitClientIO for MockGitClient {
-    fn tag(&self, prefix: &str) -> Result<String> {
+    fn get_tags(&self, prefix: &str) -> Result<String> {
         Ok(self.output.to_string())
     }
 }
