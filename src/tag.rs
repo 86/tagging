@@ -17,7 +17,9 @@ pub enum Position {
 impl Tag {
     pub fn new(raw_version: &str, prefix: String, timestamp: Option<i64>) -> Result<Self> {
         let version = Version::parse(raw_version).with_context(|| {
-            format!("Version format error. Please input according to sematic versioning.")
+            format!(
+                "Version format error! Please input according to sematic versioning like '1.0.0'."
+            )
         })?;
         Ok(Self {
             prefix: prefix,
@@ -29,15 +31,9 @@ impl Tag {
     pub fn incremented(&self, position: Position) -> Self {
         let mut new_tag = self.clone();
         match position {
-            Position::Major => {
-                new_tag.version.increment_major();
-            }
-            Position::Minor => {
-                new_tag.version.increment_minor();
-            }
-            Position::Patch => {
-                new_tag.version.increment_patch();
-            }
+            Position::Major => new_tag.version.increment_major(),
+            Position::Minor => new_tag.version.increment_minor(),
+            Position::Patch => new_tag.version.increment_patch(),
         }
         new_tag
     }
