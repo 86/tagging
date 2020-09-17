@@ -18,7 +18,12 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Install tagging
 ```
-cargo install --git git@github.com:86/tagging.git
+cargo install --git https://github.com/86/tagging
+```
+or
+```
+git clone git@github.com:86/tagging.git
+cargo install --path tagging
 ```
 
 ## Usage
