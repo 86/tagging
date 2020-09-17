@@ -6,6 +6,7 @@ use super::tag;
 
 pub trait GitRepoIO {
     fn get_tags(&self, prefix: &str) -> Result<Vec<tag::Tag>>;
+    fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String>;
     fn add_tag(&self, tag: &tag::Tag) -> Result<()>;
 }
 
@@ -15,6 +16,7 @@ pub struct GitRepo {
 
 pub trait GitClientIO {
     fn get_tags(&self, prefix: &str) -> Result<String>;
+    fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String>;
     fn add_tag(&self, tag: &tag::Tag) -> Result<String>;
 }
 
@@ -40,6 +42,15 @@ impl GitClientIO for GitClient {
             &format!("{}*", prefix),
             "--format='%(refname:short) %(creatordate:format:%s)'",
         ])
+    }
+
+    fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String> {
+        if tag.is_some() {
+            let tag = tag.map(|t| t.to_string()).unwrap_or("".to_string());
+            self.exec(vec!["log", "-n 1", "--stat", &tag])
+        } else {
+            self.exec(vec!["log", "-n 1", "--stat"])
+        }
     }
 
     fn add_tag(&self, tag: &tag::Tag) -> Result<String> {
@@ -79,6 +90,12 @@ impl GitRepoIO for GitRepo {
         tags.sort();
         tags.reverse();
         Ok(tags)
+    }
+
+    /// run `git log tag_name -n 1` and return response
+    fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String> {
+        let log = self.client.get_log(tag)?;
+        Ok(log)
     }
 
     /// run `git tag tag_name`

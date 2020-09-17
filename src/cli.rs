@@ -88,9 +88,14 @@ impl Cli {
                 break;
             }
         }
-        println!("\n✅The new tag will be: {}.", new_tag.to_string());
+        let commit_info = self.git.get_log(None)?;
+        println!(
+            "\n✅The new tag will be: {}.\n{}",
+            new_tag.to_string(),
+            commit_info
+        );
         let input = self.prompt(&format!(
-            "🤖Are you sure you want to add the new tag?: (y/n)",
+            "\n🤖Are you sure you want to add the new tag?: (y/n)",
         ))?;
         if !input.starts_with("y") {
             println!("\n❌Canceled.");

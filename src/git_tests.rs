@@ -20,8 +20,12 @@ impl GitClientIO for MockGitClient {
         Ok(self.output.to_string())
     }
 
+    fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String> {
+        Ok(self.output.to_string())
+    }
+
     fn add_tag(&self, tag: &tag::Tag) -> Result<String> {
-        Ok("".to_string())
+        Ok(self.output.to_string())
     }
 }
 
