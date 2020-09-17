@@ -1,5 +1,7 @@
 # tagging
 
+![build](https://github.com/86/tagging/workflows/build/badge.svg)
+
 ## Overview
 
 **tagging** is a cli tool to support git tagging easily in Rust.
