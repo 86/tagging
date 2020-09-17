@@ -12,7 +12,7 @@ pub struct Opt {
     pub debug: bool,
 
     /// Specify tag prefix
-    #[structopt(short, long)]
+    #[structopt(short, long, default_value = "")]
     pub prefix: String,
 }
 
@@ -34,11 +34,9 @@ impl Cli {
         let new_tag: tag::Tag;
         if tags.len() == 0 {
             loop {
-                let has_prefix = self.opt.prefix != "";
-                let input = self.prompt(&format!(
-                    "\n🤖Hi, '{}' seems first tag pattern! Please input a version for it:",
-                    if has_prefix { &self.opt.prefix } else { "it" }
-                ))?;
+                let input = self.prompt(
+                    "\n🤖Tags based on semantic versioning does not exist yet. Please enter a new version:",
+                )?;
                 let result = tag::Tag::new(&input, self.opt.prefix.clone(), Option::None);
                 match result {
                     Ok(tag) => {

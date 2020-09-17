@@ -58,10 +58,7 @@ Confirm and type `y` 🚀
 
 ### Notes
 
-The manual input prompt will be shown if tags based on semantic versioning does not exist yet.
-```
-🤖Hi, it seems first tag pattern! Please input a version for it:
-```
+- The manual input prompt will be shown if tags based on semantic versioning does not exist yet.
 
 ## Flags and Options
 ```
