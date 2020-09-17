@@ -3,7 +3,7 @@
 ## Overview
 
 **tagging** is a cli tool to support git tagging easily in Rust.
-What **tagging** can do is just adding incremented tags based on [sematic versioning](https://semver.org/).
+What **tagging** can do is just adding incremented tags based on [semantic versioning](https://semver.org/).
 
 ## Installation
 
@@ -58,7 +58,7 @@ Confirm and type `y` 🚀
 
 ### Notes
 
-The manual input prompt will be shown if tags based on sematic versioning does not exist yet.
+The manual input prompt will be shown if tags based on semantic versioning does not exist yet.
 ```
 🤖Hi, it seems first tag pattern! Please input a version for it:
 ```
@@ -95,3 +95,20 @@ fetch_tags = true
 # default is false
 push_tag = true
 ```
+
+## License
+
+Licensed under either of
+
+ * Apache License, Version 2.0
+   ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT license
+   ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as above, without any additional terms or conditions.
