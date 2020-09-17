@@ -1,11 +1,12 @@
 use anyhow::Result;
 use regex::Regex;
-use std::process::{Command, Output};
+use std::process::Command;
 
 use super::tag;
 
 pub trait GitRepoIO {
     fn get_tags(&self, prefix: &str) -> Result<Vec<tag::Tag>>;
+    fn add_tag(&self, tag: &tag::Tag) -> Result<()>;
 }
 
 pub struct GitRepo {
@@ -13,7 +14,8 @@ pub struct GitRepo {
 }
 
 pub trait GitClientIO {
-    fn tag(&self, prefix: &str) -> Result<String>;
+    fn get_tags(&self, prefix: &str) -> Result<String>;
+    fn add_tag(&self, tag: &tag::Tag) -> Result<String>;
 }
 
 struct GitClient {}
@@ -23,21 +25,25 @@ impl GitClient {
         Self {}
     }
 
-    fn exec(&self, command: Vec<&str>) -> std::io::Result<Output> {
-        Command::new("git").args(command).output()
+    fn exec(&self, command: Vec<&str>) -> Result<String> {
+        let output = Command::new("git").args(command).output()?;
+        let stdout = String::from_utf8(output.stdout)?;
+        Ok(stdout)
     }
 }
 
 impl GitClientIO for GitClient {
-    fn tag(&self, prefix: &str) -> Result<String> {
-        let output = self.exec(vec![
+    fn get_tags(&self, prefix: &str) -> Result<String> {
+        self.exec(vec![
             "tag",
             "-l",
             &format!("{}*", prefix),
             "--format='%(refname:short) %(creatordate:format:%s)'",
-        ])?;
-        let stdout = String::from_utf8(output.stdout)?;
-        Ok(stdout)
+        ])
+    }
+
+    fn add_tag(&self, tag: &tag::Tag) -> Result<String> {
+        self.exec(vec!["tag", &tag.to_string()])
     }
 }
 
@@ -54,11 +60,11 @@ impl GitRepo {
 }
 
 impl GitRepoIO for GitRepo {
-    /// run following command.
-    /// `git tag -l 'prefix*' --format='%(refname:short) %(creatordate:format:%s)'`
+    /// run `git tag -l 'prefix*' --format='%(refname:short) %(creatordate:format:%s)'`
     /// => 'prefix1.0.0 1373529534'
+    /// and convert reverse ordered Tag collection
     fn get_tags(&self, prefix: &str) -> Result<Vec<tag::Tag>> {
-        let output = self.client.tag(prefix)?;
+        let output = self.client.get_tags(prefix)?;
         let pattern = format!("'{}(.*) (.*)'", prefix);
         let regex = Regex::new(&pattern).unwrap();
         let mut tags: Vec<tag::Tag> = output
@@ -73,5 +79,11 @@ impl GitRepoIO for GitRepo {
         tags.sort();
         tags.reverse();
         Ok(tags)
+    }
+
+    /// run `git tag tag_name`
+    fn add_tag(&self, tag: &tag::Tag) -> Result<()> {
+        self.client.add_tag(tag)?;
+        Ok(())
     }
 }

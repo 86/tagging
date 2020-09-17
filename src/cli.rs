@@ -30,47 +30,74 @@ impl Cli {
     }
 
     pub fn run(&self) -> Result<()> {
-        let mut tags = self.git.get_tags(&self.opt.prefix)?;
-        let mut new_tag: Option<tag::Tag> = Option::None;
+        let tags = self.git.get_tags(&self.opt.prefix)?;
+        let new_tag: tag::Tag;
         if tags.len() == 0 {
-            let input = self.prompt("> 🤖 Please input a tag manually:")?;
-            let tag = tag::Tag::new(&input, self.opt.prefix.clone(), Option::None)?;
-            new_tag = Option::Some(tag);
-        } else {
-            if tags.len() > 3 {
-                tags.truncate(3);
-            }
-            let latest_tags: String = tags
-                .iter()
-                .map(|tag| tag.to_string())
-                .collect::<Vec<String>>()
-                .join("\n");
-            println!("Latest tags:\n{}", latest_tags);
-            let mut position: Option<tag::Position> = Option::None;
-            while position.is_none() {
-                let input = self.prompt("\n🤖 Which position do you want to increment?\nmajor (M), minor (m), patch (p):")?;
-                match input.as_str() {
-                    "M" => {
-                        position = Option::Some(tag::Position::Major);
+            loop {
+                let has_prefix = self.opt.prefix != "";
+                let input = self.prompt(&format!(
+                    "\n🤖Hi, '{}' seems first tag pattern! Please input a version for it:",
+                    if has_prefix { &self.opt.prefix } else { "it" }
+                ))?;
+                let result = tag::Tag::new(&input, self.opt.prefix.clone(), Option::None);
+                match result {
+                    Ok(tag) => {
+                        new_tag = tag;
+                        break;
                     }
-                    "m" => {
-                        position = Option::Some(tag::Position::Minor);
+                    Err(err) => {
+                        eprintln!("\n🛑{}", err);
+                        continue;
                     }
-                    "p" => {
-                        position = Option::Some(tag::Position::Patch);
-                    }
-                    _ => eprintln!("\n🛑 Invalid postion!"),
                 }
             }
-            new_tag = Option::Some(tags.first().unwrap().incremented(position.unwrap()));
-        }
-        let new_tag = new_tag.unwrap_or_else(|| panic!(""));
-        println!("\n✅ New tag will be: {}.", new_tag.to_string());
-        let input = self.prompt(&format!("🤖 Are you sure you want to add the new tag?:",))?;
-        if !input.starts_with("y") {
-            println!("canceled.");
         } else {
-            println!("✨ Created the new tag: {}", new_tag.to_string());
+            let pick = 3;
+            let up_to = std::cmp::min(pick, tags.len());
+            let latest_tags: String = tags[0..up_to]
+                .iter()
+                .enumerate()
+                .map(|elem| {
+                    let (index, tag) = elem;
+                    let tag_name = tag.to_string();
+                    let target_mark = if index == 0 { "  <-- 🎯Target" } else { "" };
+                    format!("{}{}", tag_name, target_mark)
+                })
+                .collect::<Vec<String>>()
+                .join("\n");
+            println!(
+                "🔖Latest tags:\n{}{}",
+                latest_tags,
+                if tags.len() > pick { "\n:" } else { "" }
+            );
+            loop {
+                let input = self.prompt(
+                    "\n🤖Which position do you want to increment?\nmajor(M) / minor(m) / patch(p):",
+                )?;
+                let position: tag::Position;
+                match input.as_str() {
+                    "M" => position = tag::Position::Major,
+                    "m" => position = tag::Position::Minor,
+                    "p" => position = tag::Position::Patch,
+                    _ => {
+                        eprintln!("\n🛑Invalid position!");
+                        continue;
+                    }
+                }
+                new_tag = tags.first().unwrap().incremented(position);
+                break;
+            }
+        }
+        println!("\n✅The new tag will be: {}.", new_tag.to_string());
+        let input = self.prompt(&format!(
+            "🤖Are you sure you want to add the new tag?: (y/n)",
+        ))?;
+        if !input.starts_with("y") {
+            println!("\n❌Canceled.");
+        } else {
+            self.git.add_tag(&new_tag)?;
+            println!("\n✨Created the new tag: {} ✨", new_tag.to_string());
+            println!("\n✅Done.");
         }
         Ok(())
     }

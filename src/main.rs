@@ -7,6 +7,5 @@ fn main() -> Result<()> {
         println!("{:?}", cli.opt);
     }
     cli.run()?;
-    println!("✅ Done.");
     Ok(())
 }

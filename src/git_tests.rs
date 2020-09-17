@@ -1,6 +1,7 @@
 use anyhow::Result;
 
 use super::git::{GitClientIO, GitRepo, GitRepoIO};
+use super::tag;
 
 struct MockGitClient {
     output: String,
@@ -15,8 +16,12 @@ impl MockGitClient {
 }
 
 impl GitClientIO for MockGitClient {
-    fn tag(&self, prefix: &str) -> Result<String> {
+    fn get_tags(&self, prefix: &str) -> Result<String> {
         Ok(self.output.to_string())
+    }
+
+    fn add_tag(&self, tag: &tag::Tag) -> Result<String> {
+        Ok("".to_string())
     }
 }
 
