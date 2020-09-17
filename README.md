@@ -2,71 +2,84 @@
 
 ## Overview
 
-tagging is a cli tool to support git tagging easily in Rust.
-You can add incremented tags based on sematic versioning without hustle.
+**tagging** is a cli tool to support git tagging easily in Rust.
+What **tagging** can do is just adding incremented tags based on [sematic versioning](https://semver.org/).
 
-## Semantic versioning
+## Installation
 
-Semantic versioning is a simple rule set that dictate how version numbers are assigned and incremented. See details from https://semver.org/.
+### Cargo
+
+Install rustup (rust and cargo will be installed) if you not have cargo yet.
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Install tagging
+```
+cargo install --git git@github.com:86/tagging.git
+```
 
 ## Usage
 
-Simply run `tagging`
+Simply run `tagging` 🏃
 ```
-last tags:
-0.2.0
-0.1.1
-0.1.0
+🔖Latest tags:
+v2.3.1  <-- 🎯Target
+v2.3.0
+v2.2.0
 :
 
-Which position do you increment?
-major (M), minor (m), patch (p)
-> 
+🤖Which position do you want to increment?
+major(M) / minor(m) / patch(p):
 ```
 
-Select incrementing position and return
+Type a incrementing position ☝️
 ```
-Are you sure you want to add the new tag?
-
-new tag: 0.3.0
-commit: 062ac788bc5af463484b9ffef499ba155dc78530 (HEAD -> master)
+✅The new tag will be: v2.4.0.
+commit 4acba8f33f3edd3c4b035e3c1b998e734e12507f
+Merge: e0fb394 1716a31
 Author: 86 <triaedz@gmail.com>
-Date:   Tue Sep 15 08:43:15 2020 +0900
+Date:   Thu Sep 17 15:35:50 2020 +0900
 
-    cargo new
+    Merge pull request #6 from 86/log
+    
+    feat: show commit log before adding tag
 
->
+
+🤖Are you sure you want to add the new tag?: (y/n)
 ```
 
-Confirm and return
-
+Confirm and type `y` 🚀
 ```
-Successfully created the new tag!
+✨Created the new tag: v2.4.0 ✨
 
-new tag: 0.3.0
-commit: 062ac788bc5af463484b9ffef499ba155dc78530 (HEAD -> master, tag: 0.3.0)
-commit: 062ac788bc5af463484b9ffef499ba155dc78530 (HEAD -> master)
-Author: 86 <triaedz@gmail.com>
-Date:   Tue Sep 15 08:43:15 2020 +0900
-
-    cargo new
-
->
+✅Done.
 ```
 
 ### Notes
 
-The manual input prompt will be shown if tags based on semantic versioning does not exist
+The manual input prompt will be shown if tags based on sematic versioning does not exist yet.
 ```
-A tag based on sematic versioning does not exist.
-Please input a new tag manually.
-> 
+🤖Hi, it seems first tag pattern! Please input a version for it:
 ```
 
-## Configurations
+## Flags and Options
+```
+FLAGS:
+    -d, --debug      Activate debug mode
+    -h, --help       Prints help information
+    -V, --version    Prints version information
 
-You can configure options by creating a `tagging.toml` file
-```rust
+OPTIONS:
+    -p, --prefix <prefix>    Specify tag prefix
+```
+
+## TODOs
+- [ ] CI
+- [ ] Supports logging
+- [ ] Supports CI mode that disables prompt
+- [ ] Supports configuration file that allows you to configure options by creating a `tagging.toml` file
+```toml
 # You can register prefixes to use for tags.
 # Tagging ask you which prefix do you use before tagging if you registered them.
 prefixes = [
