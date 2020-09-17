@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["86 <triaedz@gmail.com>"]
 edition = "2018"
 description = "tagging is a cli tool to support git tagging easily. What tagging can do is just adding incremented tags based on sematic versioning."
-license = "MIT"
+license = "MIT/Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
