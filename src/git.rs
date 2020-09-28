@@ -55,8 +55,8 @@ impl GitClientIO for GitClient {
 
     fn add_tag(&self, tag: &tag::Tag) -> Result<String> {
         match &tag.message {
-            Option::Some(message) => self.exec(vec!["tag", "-a", &tag.to_string(), "-m", message]),
-            Option::None => self.exec(vec!["tag", &tag.to_string()]),
+            Some(message) => self.exec(vec!["tag", "-a", &tag.to_string(), "-m", message]),
+            None => self.exec(vec!["tag", &tag.to_string()]),
         }
     }
 }
@@ -87,7 +87,7 @@ impl GitRepoIO for GitRepo {
                 let captures = regex.captures(line)?;
                 let version = captures[1].to_string();
                 let timestamp = captures[2].parse::<i64>().ok();
-                tag::Tag::new(&version, prefix.to_string(), timestamp, Option::None).ok()
+                tag::Tag::new(&version, prefix.to_string(), timestamp, None).ok()
             })
             .collect();
         tags.sort();
