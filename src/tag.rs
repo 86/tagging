@@ -6,6 +6,7 @@ pub struct Tag {
     pub prefix: String,
     pub version: Version,
     pub timestamp: Option<i64>,
+    pub message: Option<String>,
 }
 
 pub enum Position {
@@ -15,7 +16,12 @@ pub enum Position {
 }
 
 impl Tag {
-    pub fn new(raw_version: &str, prefix: String, timestamp: Option<i64>) -> Result<Self> {
+    pub fn new(
+        raw_version: &str,
+        prefix: String,
+        timestamp: Option<i64>,
+        message: Option<String>,
+    ) -> Result<Self> {
         let version = Version::parse(raw_version).with_context(|| {
             format!(
                 "Version format error! Please input according to sematic versioning like '1.0.0'."
@@ -25,6 +31,7 @@ impl Tag {
             prefix: prefix,
             version: version,
             timestamp: timestamp,
+            message: message,
         })
     }
 
