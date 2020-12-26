@@ -4,6 +4,9 @@ use std::process::Command;
 
 use super::tag;
 
+#[cfg(test)]
+mod tests;
+
 pub trait GitRepoIO {
     fn get_tags(&self, prefix: &str) -> Result<Vec<tag::Tag>>;
     fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String>;
@@ -68,7 +71,8 @@ impl GitRepo {
         }
     }
 
-    pub fn _new(client: Box<dyn GitClientIO>) -> Self {
+    #[cfg(test)]
+    fn new_with_client(client: Box<dyn GitClientIO>) -> Self {
         Self { client: client }
     }
 }

@@ -1,7 +1,7 @@
 use anyhow::Result;
 
-use super::git::{GitClientIO, GitRepo, GitRepoIO};
 use super::tag;
+use super::{GitClientIO, GitRepo, GitRepoIO};
 
 struct MockGitClient {
     output: String,
@@ -16,15 +16,15 @@ impl MockGitClient {
 }
 
 impl GitClientIO for MockGitClient {
-    fn get_tags(&self, prefix: &str) -> Result<String> {
+    fn get_tags(&self, _prefix: &str) -> Result<String> {
         Ok(self.output.to_string())
     }
 
-    fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String> {
+    fn get_log(&self, _tag: Option<&tag::Tag>) -> Result<String> {
         Ok(self.output.to_string())
     }
 
-    fn add_tag(&self, tag: &tag::Tag) -> Result<String> {
+    fn add_tag(&self, _tag: &tag::Tag) -> Result<String> {
         Ok(self.output.to_string())
     }
 }
@@ -32,7 +32,7 @@ impl GitClientIO for MockGitClient {
 #[test]
 fn test_get_tags_none() {
     let mock = MockGitClient::new("");
-    let git = GitRepo::_new(Box::new(mock));
+    let git = GitRepo::new_with_client(Box::new(mock));
     let tags = git.get_tags("").unwrap();
     assert_eq!(tags.len(), 0);
 }
@@ -45,7 +45,7 @@ fn test_get_tags_non_prefix() {
     '1.0.1 1600000000'
     ";
     let mock = MockGitClient::new(output);
-    let git = GitRepo::_new(Box::new(mock));
+    let git = GitRepo::new_with_client(Box::new(mock));
     let tags = git.get_tags("").unwrap();
     assert_eq!(tags.len(), 3);
     let tags: Vec<String> = tags.iter().map(|t| t.to_string()).collect();
@@ -60,7 +60,7 @@ fn test_get_tags_with_prefix() {
     '1.0.1 1600000000'
     ";
     let mock = MockGitClient::new(output);
-    let git = GitRepo::_new(Box::new(mock));
+    let git = GitRepo::new_with_client(Box::new(mock));
     let tags = git.get_tags("v").unwrap();
     assert_eq!(tags.len(), 2);
     let tags: Vec<String> = tags.iter().map(|t| t.to_string()).collect();
