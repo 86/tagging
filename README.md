@@ -30,19 +30,19 @@ cargo install --path tagging
 
 Simply run `tagging` 🏃
 ```
-🔖Latest tags:
-v2.3.1  <-- 🎯Target
+🔖 Latest tags:
+v2.3.1  <-- 🎯 Target
 v2.3.0
 v2.2.0
 :
 
-🤖Which position do you want to increment?
+🤖 Which position do you want to increment?
 major(M) / minor(m) / patch(p):
 ```
 
 Type a incrementing position ☝️
 ```
-✅The new tag will be: v2.4.0.
+✅ The new tag will be: v2.4.0.
 commit 4acba8f33f3edd3c4b035e3c1b998e734e12507f
 Merge: e0fb394 1716a31
 Author: 86 <triaedz@gmail.com>
@@ -58,9 +58,9 @@ Date:   Thu Sep 17 15:35:50 2020 +0900
 
 Confirm and type `y` 🚀
 ```
-✨Created the new tag: v2.4.0 ✨
+✨ Created the new tag: v2.4.0 ✨
 
-✅Done.
+✅ Done.
 ```
 
 ### Notes
@@ -72,32 +72,12 @@ Confirm and type `y` 🚀
 FLAGS:
     -d, --debug      Activate debug mode
     -h, --help       Prints help information
+    -q, --quiet      Disable prompt
     -V, --version    Prints version information
 
 OPTIONS:
-    -p, --prefix <prefix>    Specify tag prefix
-```
-
-## TODOs
-- [ ] CI
-- [ ] Supports logging
-- [ ] Supports CI mode that disables prompt
-- [ ] Supports configuration file that allows you to configure options by creating a `tagging.toml` file
-```toml
-# You can register prefixes to use for tags.
-# Tagging ask you which prefix do you use before tagging if you registered them.
-prefixes = [
-    "v",
-    "frontend-",
-]
-
-# fetch latest tags (`git fetch --tag`) when launching tagging or not
-# default is false
-fetch_tags = true
-
-# push the new tags (`git push origin NEW_TAG`) after created a new tag or not
-# default is false
-push_tag = true
+    -i, --inc-position <inc-position>    Specify increment position
+    -p, --prefix <prefix>                Specify tag prefix [default: ]
 ```
 
 ## License
