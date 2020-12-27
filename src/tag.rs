@@ -1,5 +1,27 @@
-use anyhow::{Context, Result};
+use anyhow::{anyhow, Context, Error, Result};
 use semver::Version;
+use std::str::FromStr;
+
+#[derive(Debug, Clone)]
+pub enum Position {
+    Major,
+    Minor,
+    Patch,
+}
+
+impl FromStr for Position {
+    type Err = Error;
+    fn from_str(str: &str) -> Result<Self, Self::Err> {
+        match str {
+            "M" | "major" | "Major" => Ok(Self::Major),
+            "m" | "minor" | "Minor" => Ok(Self::Minor),
+            "p" | "patch" | "Patch" => Ok(Self::Patch),
+            _ => Err(anyhow!(
+                "Invalid position. Supported positions are major(M), minor(m), patch(p)."
+            )),
+        }
+    }
+}
 
 #[derive(Debug, Eq, Clone)]
 pub struct Tag {
@@ -7,12 +29,6 @@ pub struct Tag {
     pub version: Version,
     pub timestamp: Option<i64>,
     pub message: Option<String>,
-}
-
-pub enum Position {
-    Major,
-    Minor,
-    Patch,
 }
 
 impl Tag {
