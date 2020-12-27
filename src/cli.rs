@@ -8,6 +8,10 @@ use super::tag;
 #[derive(StructOpt, Debug)]
 #[structopt(name = "tagging")]
 pub struct Opt {
+    /// Push tag to remote after tagging
+    #[structopt(long)]
+    pub push_tag: bool,
+
     /// Disable prompt
     #[structopt(short, long)]
     pub quiet: bool,
@@ -177,6 +181,10 @@ impl Cli {
     fn add_new_tag(&self, new_tag: &tag::Tag) -> Result<()> {
         self.git.add_tag(new_tag)?;
         println!("\n✨ Created the new tag: {} ✨", new_tag.to_string());
+        if self.opt.push_tag {
+            println!("\n⚡️ Pushing the new tag to remote...");
+            self.git.push_tag(new_tag)?;
+        }
         println!("\n✅ Done.");
         Ok(())
     }

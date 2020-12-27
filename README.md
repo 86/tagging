@@ -70,10 +70,11 @@ Confirm and type `y` 🚀
 ## Flags and Options
 ```
 FLAGS:
-    -d, --debug      Activate debug mode
-    -h, --help       Prints help information
-    -q, --quiet      Disable prompt
-    -V, --version    Prints version information
+    -d, --debug       Activate debug mode
+    -h, --help        Prints help information
+        --push-tag    Push tag to remote after tagging
+    -q, --quiet       Disable prompt
+    -V, --version     Prints version information
 
 OPTIONS:
     -i, --inc-position <inc-position>    Specify increment position

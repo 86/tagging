@@ -27,6 +27,10 @@ impl GitClientIO for MockGitClient {
     fn add_tag(&self, _tag: &tag::Tag) -> Result<String> {
         Ok(self.output.to_string())
     }
+
+    fn push_tag(&self, _tag: &tag::Tag) -> Result<String> {
+        Ok(self.output.to_string())
+    }
 }
 
 #[test]
