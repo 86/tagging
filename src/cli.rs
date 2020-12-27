@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use std::str::FromStr;
 use structopt::StructOpt;
 
 use super::git::{GitRepo, GitRepoIO};
@@ -124,12 +125,10 @@ impl Cli {
                 "\n🤖 Which position do you want to increment?\nmajor(M) / minor(m) / patch(p):",
             )?;
             let position: tag::Position;
-            match input.as_str() {
-                "M" => position = tag::Position::Major,
-                "m" => position = tag::Position::Minor,
-                "p" => position = tag::Position::Patch,
-                _ => {
-                    eprintln!("\n🛑 Invalid position!");
+            match tag::Position::from_str(input.as_str()) {
+                Ok(value) => position = value,
+                Err(err) => {
+                    eprintln!("\n🛑 {}", err);
                     continue;
                 }
             }
