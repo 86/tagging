@@ -11,6 +11,7 @@ pub trait GitRepoIO {
     fn get_tags(&self, prefix: &str) -> Result<Vec<tag::Tag>>;
     fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String>;
     fn add_tag(&self, tag: &tag::Tag) -> Result<()>;
+    fn push_tag(&self, tag: &tag::Tag) -> Result<()>;
 }
 
 pub struct GitRepo {
@@ -21,6 +22,7 @@ pub trait GitClientIO {
     fn get_tags(&self, prefix: &str) -> Result<String>;
     fn get_log(&self, tag: Option<&tag::Tag>) -> Result<String>;
     fn add_tag(&self, tag: &tag::Tag) -> Result<String>;
+    fn push_tag(&self, tag: &tag::Tag) -> Result<String>;
 }
 
 struct GitClient {}
@@ -61,6 +63,10 @@ impl GitClientIO for GitClient {
             Some(message) => self.exec(vec!["tag", "-a", &tag.to_string(), "-m", message]),
             None => self.exec(vec!["tag", &tag.to_string()]),
         }
+    }
+
+    fn push_tag(&self, tag: &tag::Tag) -> Result<String> {
+        self.exec(vec!["push", "origin", &tag.to_string()])
     }
 }
 
@@ -108,6 +114,12 @@ impl GitRepoIO for GitRepo {
     /// run `git tag tag_name`
     fn add_tag(&self, tag: &tag::Tag) -> Result<()> {
         self.client.add_tag(tag)?;
+        Ok(())
+    }
+
+    /// run `git push origin tag_name`
+    fn push_tag(&self, tag: &tag::Tag) -> Result<()> {
+        self.client.push_tag(tag)?;
         Ok(())
     }
 }
