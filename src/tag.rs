@@ -2,7 +2,7 @@ use anyhow::{anyhow, Context, Error, Result};
 use semver::Version;
 use std::str::FromStr;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Position {
     Major,
     Minor,
